@@ -10,14 +10,14 @@ import (
 )
 
 // generate a key of proper length for AES
-func generateKey(size int) []byte {
+func GenerateKey(size int) []byte {
 	key := make([]byte, size)
 	rand.Read(key)
 	return key
 }
 
 // encrypt function using AES-256
-func encrypt(data string, key []byte) string {
+func Encrypt(data string, key []byte) string {
 	// ensure the key length is correct
 	if len(key) != 32 {
 		log.Fatal("Invalid key length. AES requires a 32-byte key.")
@@ -52,7 +52,7 @@ func encrypt(data string, key []byte) string {
 }
 
 // decrypt function using AES-256
-func decrypt(ciphertext string, key []byte) string {
+func Decrypt(ciphertext string, key []byte) string {
 	// ensure the key length is correct (32 bytes for AES-256)
 	if len(key) != 32 {
 		log.Fatal("Invalid key length. AES requires a 32-byte key.")

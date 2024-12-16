@@ -1,11 +1,20 @@
 package main
 
-func main() {
-	plaintext := "Hello"
-	key := crypto.generateKey(32)
+import (
+	"fmt"
 
-	encrypted := crypto.encrypt(plaintext, key)
-	println(encrypted)
-	decrypted := crypto.decrypt(encrypted, key)
-	println(decrypted)
+	"github.com/nzajk/password-manager/src/crypto"
+)
+
+func main() {
+	plaintext := "testing to see if it works"
+	key := crypto.GenerateKey(32)
+
+	// encrypt the plaintext
+	encrypted := crypto.Encrypt(plaintext, key)
+	fmt.Println("Encrypted:", encrypted)
+
+	// decrypt the ciphertext
+	decrypted := crypto.Decrypt(encrypted, key)
+	fmt.Println("Decrypted:", decrypted)
 }
