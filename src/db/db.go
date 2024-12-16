@@ -1,4 +1,4 @@
-package main
+package db
 
 import (
 	"database/sql"
@@ -10,7 +10,31 @@ import (
 	_ "github.com/lib/pq"
 )
 
-func queryDB(db *sql.DB, query string) {
+// connects to the database and returns the connection
+func ConnectDB() (*sql.DB, error) {
+	// load environment variables from .env file
+	err := godotenv.Load()
+	if err != nil {
+		log.Fatal("Error loading .env file")
+	}
+
+	// get connection details from environment variables
+	user := os.Getenv("DB_USER")
+	dbname := os.Getenv("DB_NAME")
+
+	// construct connection string
+	connectionStr := fmt.Sprintf("user=%s dbname=%s sslmode=disable", user, dbname)
+
+	db, err := sql.Open("postgres", connectionStr)
+	if err != nil {
+		log.Fatal(err)
+	}
+
+	return db, nil
+}
+
+// queries the database and prints the results
+func QueryDB(db *sql.DB, query string) {
 	rows, err := db.Query(query)
 	if err != nil {
 		print("Error with query:", err)
@@ -33,26 +57,10 @@ func queryDB(db *sql.DB, query string) {
 	}
 }
 
-func main() {
-	// load environment variables from .env file
-	err := godotenv.Load()
-	if err != nil {
-		log.Fatal("Error loading .env file")
-	}
-
-	// get connection details from environment variables
-	user := os.Getenv("DB_USER")
-	dbname := os.Getenv("DB_NAME")
-
-	// construct connection string
-	connectionStr := fmt.Sprintf("user=%s dbname=%s sslmode=disable", user, dbname)
-
-	db, err := sql.Open("postgres", connectionStr)
+// adds a new row to the database
+func AddDB(db *sql.DB, query string) {
+	_, err := db.Exec(query)
 	if err != nil {
 		log.Fatal(err)
 	}
-
-	queryDB(db, "SELECT * FROM passwords;")
-
-	db.Close()
 }
