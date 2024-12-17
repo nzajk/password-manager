@@ -35,6 +35,7 @@ func Connect() (*sql.DB, error) {
 }
 
 // queries the database and prints the results
+// todo: provide security from sql injection
 func Query(db *sql.DB, query string) {
 	rows, err := db.Query(query)
 	if err != nil {
