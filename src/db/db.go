@@ -8,10 +8,11 @@ import (
 
 	"github.com/joho/godotenv"
 	_ "github.com/lib/pq"
+	"github.com/nzajk/password-manager/src/schemas"
 )
 
 // connects to the database and returns the connection
-func ConnectDB() (*sql.DB, error) {
+func Connect() (*sql.DB, error) {
 	// load environment variables from .env file
 	err := godotenv.Load()
 	if err != nil {
@@ -34,7 +35,7 @@ func ConnectDB() (*sql.DB, error) {
 }
 
 // queries the database and prints the results
-func QueryDB(db *sql.DB, query string) {
+func Query(db *sql.DB, query string) {
 	rows, err := db.Query(query)
 	if err != nil {
 		print("Error with query:", err)
@@ -58,9 +59,10 @@ func QueryDB(db *sql.DB, query string) {
 }
 
 // adds a new row to the database
-func AddDB(db *sql.DB, query string) {
-	_, err := db.Exec(query)
+func AddRow(db *sql.DB, data schemas.Entry) {
+	query := "INSERT INTO passwords (id, service, username, password) VALUES ($1, $2, $3, $4);"
+	_, err := db.Exec(query, data.ID, data.Service, data.Username, data.Password)
 	if err != nil {
-		log.Fatal(err)
+		log.Fatalf("Error inserting row: %v", err)
 	}
 }
