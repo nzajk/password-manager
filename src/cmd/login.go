@@ -3,14 +3,12 @@ package cmd
 import (
 	"fmt"
 	"log"
+	"os"
 
 	"github.com/nzajk/password-manager/src/crypto"
 	"github.com/nzajk/password-manager/src/db"
 	"github.com/spf13/cobra"
 )
-
-// keep track of whether the user is logged in (security measure)
-var loggedIn bool = false
 
 // user must give a correct master password to login
 var LoginCmd = &cobra.Command{
@@ -42,7 +40,7 @@ var LoginCmd = &cobra.Command{
 		// hash the given password to compare with the master password
 		if crypto.Hash(password) == masterPass {
 			fmt.Println("Successfully logged in")
-			loggedIn = true
+			os.Setenv("LOGGED_IN", "true")
 		} else {
 			fmt.Println("Incorrect password")
 		}

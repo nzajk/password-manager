@@ -1,10 +1,11 @@
 package crypto
 
 import (
-	"golang.org/x/crypto/bcrypt"
+	"crypto/sha256"
+	"fmt"
 )
 
 func Hash(password string) string {
-	hash, _ := bcrypt.GenerateFromPassword([]byte(password), bcrypt.DefaultCost)
-	return string(hash)
+	hash := sha256.Sum256([]byte(password))
+	return fmt.Sprintf("%x", hash)
 }

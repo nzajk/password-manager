@@ -3,7 +3,9 @@ package cmd
 import (
 	"fmt"
 	"log"
+	"os"
 
+	"github.com/joho/godotenv"
 	"github.com/nzajk/password-manager/src/crypto"
 	"github.com/nzajk/password-manager/src/db"
 	"github.com/spf13/cobra"
@@ -14,7 +16,17 @@ var SaveCmd = &cobra.Command{
 	Use:   "save",
 	Short: "Save a password to the database.",
 	Run: func(cmd *cobra.Command, args []string) {
-		if !loggedIn {
+		// load the environment variables
+		err := godotenv.Load()
+		if err != nil {
+			log.Fatal("Error loading .env file")
+		}
+
+		loggedIn := os.Getenv("LOGGED_IN")
+		// fmt.Println("LOGGED_IN:", loggedIn)
+
+		// check if the user is logged in
+		if loggedIn != "true" {
 			log.Fatal("You must be logged in to save a password.")
 		}
 
